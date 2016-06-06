@@ -1,6 +1,7 @@
 {
   "site": {
     "gtmId": "",
+    "fbAppId": "",
     "hostname": "projects.meerkats.org.au",
     "defaultSiteTitle": "Meerkats Projects"
   },
