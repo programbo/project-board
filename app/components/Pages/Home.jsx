@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { Team } from '../Project';
 import { projects } from '../../data/projects';
-import { projectPath, sortProjects } from '../../utils/helpers';
+import { projectPath, sortProjects } from '../Project/helpers';
 
 const sortedProjects = sortProjects(projects);
 

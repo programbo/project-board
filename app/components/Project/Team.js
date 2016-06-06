@@ -87,7 +87,13 @@ export default class Team extends React.Component {
     return false;
   }
   render() {
-    return (<div className="team"><svg ref={(ref) => (this.container = ref)} viewBox="0 0 1000 1000"/></div>);
+    return (
+      <div className="team">
+        <svg ref={(ref) => (this.container = ref)} viewBox="0 0 1000 1000">
+          <g className="team-view"/>
+        </svg>
+      </div>
+    );
   }
 }
 

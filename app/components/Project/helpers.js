@@ -1,7 +1,10 @@
+import { compareBy, simpleSlug } from '../../utils/helpers';
+
 export const labelRotation = ({ startAngle, endAngle }) => (180 / Math.PI) * (startAngle + ((endAngle - startAngle) / 2));
 
 export const parseMembers = ({ members }) => {
-  const project = { team: [] };
+  const project = {};
+  const team = [];
   members.forEach(({ position, name }) => {
     switch (position) {
     case 'Top Kat':
@@ -14,8 +17,19 @@ export const parseMembers = ({ members }) => {
       project.manager = name;
       break;
     default:
-      project.team.push({ position, name });
+      team.push({ position, name });
     }
   });
-  return project;
+  team.sort(compareBy(['position']));
+  return { team, ...project };
+};
+
+export const sortProjects = (unsortedProjects) => (
+  unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
+);
+
+export const projectPath = (project) => {
+  const { brand, name } = project;
+  const path = `/project/${simpleSlug(brand)}/${simpleSlug(name)}`;
+  return path;
 };

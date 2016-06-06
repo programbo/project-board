@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import { IndexLink, Link } from 'react-router';
 import { Header, Footer, Team } from '../Project';
 import { projects } from '../../data/projects';
-import { projectPath, simpleSlug, sortProjects } from '../../utils/helpers';
+import { simpleSlug } from '../../utils/helpers';
+import { projectPath, sortProjects } from '../Project/helpers';
 
 const sortedProjects = sortProjects(projects);
 
