@@ -1,0 +1,23 @@
+@import '../mixins/colors';
+@import '../mixins/fonts';
+
+// https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
+
+$font-family-sans-serif: font-stack(averta, light);
+$font-size-base: 16px;
+
+$text-color: color(black);
+$body-bg: color(white);
+$link-color: color(magenta);
+$link-hover-decoration: none;
+
+$headings-font-family: font-stack(averta, light);
+$headings-line-height: 1.2;
+
+$btn-default-color: color(magenta);
+$btn-default-bg: transparent;
+$btn-default-border: color(magenta);
+$btn-link-disabled-color: color(grey, light);
+$btn-border-radius-base: 0;
+$btn-border-radius-large: 0;
+$btn-border-radius-small: 0;

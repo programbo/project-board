@@ -1,0 +1,43 @@
+version: '2'
+volumes:
+  mongodb:
+    external: false
+services:
+  web:
+    networks:
+      - proxy
+      - app
+    image: registry.meerkats.com.au:5000/projects.meerkats.com.au-nginx:latest
+    restart: always
+    depends_on:
+      - node
+    volumes_from:
+      - node:ro
+  node:
+    #image: registry.meerkats.com.au:5000/projects.meerkats.com.au-node:latest
+    build: ../
+    networks:
+      - app
+    restart: always
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    volumes:
+      - /usr/src/app/public
+    environment:
+      MONGO_HOST: mongo
+  mongo:
+    networks:
+      - app
+    restart: always
+    image: mongo:3
+    volumes:
+      - mongodb:/data/db
+    environment:
+      MONGOBACKUP: 'true'
+networks:
+  app:
+  proxy:
+    external:
+      name: proxy-network

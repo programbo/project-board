@@ -1,0 +1,15 @@
+$fonts: (
+  averta: (
+    light: (
+      family: 'Averta Std',
+      weight: 200
+    ),
+    bold: (
+      family: 'Averta Std',
+      weight: 700
+    ),
+    fallback: (
+      'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
+    )
+  )
+);

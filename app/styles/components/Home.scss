@@ -1,0 +1,39 @@
+.home {
+  @include container;
+  text-align: center;
+  .projects {
+    margin-top: 40px;
+  }
+  .project-link {
+    @include transition(transform 300ms ease, border-color 300ms ease);
+    display: block;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 2px dashed color(white);
+    border-radius: 15px;
+    &:hover {
+      border-color: color(grey, light);
+      svg {
+        transform: scale(1.1);
+      }
+    }
+  }
+  .project-label {
+    @include centered;
+    z-index: 1;
+    width: 80%;
+    color: color(black);
+    text-align: center;
+  }
+  .project-brand {
+    @include font(averta, bold);
+    @include font-size(20px, 20px);
+  }
+  .project-name {
+    @include font-size(18px);
+    font-style: italic;
+  }
+}

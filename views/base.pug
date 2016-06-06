@@ -1,0 +1,24 @@
+include mixins/gtm
+
+<!DOCTYPE html>
+<!--[if IE 10]>
+<html lang="en" class="lt-ie11">
+<![endif]-->
+<!--[if gt IE 11]><!-->
+<html lang="en">
+<!--<![endif]-->
+head
+  meta(charset="UTF-8")
+  meta(http-equiv="x-ua-compatible", content="ie=edge")
+  meta(name="viewport", content="width=device-width, initial-scale=1")
+  title Meerkats Projects
+  link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+  link(rel="apple-touch-icon", href="/apple-touch-icon.png", type="image/png")
+  link(rel="apple-touch-icon-precomposed", href="/apple-touch-icon-precomposed.png", type="image/png")
+  script(src="/modernizr-bundle.js")
+  script(src="/bundle.js")
+body
+  if gtmId
+    +gtm(gtmId)
+  block content
+</html>

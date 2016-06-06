@@ -1,0 +1,8 @@
+{
+  "site": {
+    "hostname": "projects.meerkats.com.au"
+  },
+  "api": {
+    "mongo": "mongodb://mongo/meerkats-projects"
+  }
+}

@@ -1,0 +1,36 @@
+.project {
+  .home-link {
+    position: absolute;
+    top: 13px;
+    left: 20px;
+    z-index: 1;
+  }
+  .glyphicon {
+    @include font-size(40px);
+    @include transition(opacity 100ms ease);
+    color: color(grey, medium);
+    opacity: 0.1;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.project-link {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  &-previous {
+    left: 3px;
+    @include breakpoint($sm) {
+      left: 20px;
+    }
+  }
+  &-next {
+    right: 3px;
+    @include breakpoint($sm) {
+      right: 20px;
+    }
+  }
+}

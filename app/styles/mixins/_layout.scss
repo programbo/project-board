@@ -1,0 +1,40 @@
+$xs:$screen-xs;
+$sm:$screen-sm;
+$md:$screen-md;
+$lg:$screen-lg;
+
+// Add custom Extra Large breakpoint
+$xl:1600px;
+
+@mixin breakpoint($value, $constraint:min) {
+  @if $constraint == max {
+    $value: $value - 1;
+  }
+  @media screen and (#{$constraint}-width:#{$value}) {
+    @content;
+  }
+}
+
+@mixin container {
+  @include container-fixed;
+  @include breakpoint($sm) {
+    width: $container-sm;
+  }
+  @include breakpoint($md) {
+    width: $container-md;
+  }
+  @include breakpoint($lg) {
+    width: $container-lg;
+  }
+  @include breakpoint($xl) {
+    width: $xl;
+  }
+}
+
+@mixin centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @content;
+}

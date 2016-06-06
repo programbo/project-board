@@ -1,0 +1,29 @@
+@import '../settings/colors';
+
+// Get a hexidecimal color value from a pre-defined map set in
+// settings/config.
+//
+// @param {color} $color Color key in map
+// @param {color} $shade Shade key in map
+// @param {map} $color-map A map of colors
+@function color($color, $shade: null, $color-map: $colors) {
+  @if map-has-key($color-map, $color) {
+    $map: map-get($color-map, $color);
+    @if $shade == null {
+      @if length($map) >= 1 {
+        @return $map;
+      }
+      @else {
+        @error "color not found";
+        @return false;
+      }
+    }
+    @else {
+      @return map-get($map, $shade);
+    }
+  }
+  @else {
+    @error "color #{$color} not found";
+    @return false;
+  }
+}

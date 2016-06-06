@@ -1,0 +1,12 @@
+{
+  "site": {
+    "hostname": "localhost"
+  },
+  "api": {
+    "mongo": "mongodb://localhost/projects-dev"
+  },
+  "docker": {
+    "host": "docker2.meerkats.com.au",
+    "sitename": "projects.staging.meerkats.com.au"
+  }
+}

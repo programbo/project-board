@@ -1,0 +1,39 @@
+<svg id="hamburger" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28" height="20" viewBox="0 0 28 20">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #383838;
+      }
+
+      .cls-1 {
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        filter: url(#filter-2);
+      }
+
+      .cls-3 {
+        filter: url(#filter-3);
+      }
+    </style>
+    <filter id="filter" x="0" y="0" width="28" height="4" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#3e3935"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+    <filter id="filter-2" x="0" y="8" width="28" height="4" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#3e3935"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+    <filter id="filter-3" x="0" y="16" width="28" height="4" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#3e3935"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect class="cls-1" width="28" height="4"/>
+  <rect id="Rectangle_2_copy" data-name="Rectangle 2 copy" class="cls-2" y="8" width="28" height="4"/>
+  <rect id="Rectangle_2_copy_2" data-name="Rectangle 2 copy 2" class="cls-3" y="16" width="28" height="4"/>
+</svg>

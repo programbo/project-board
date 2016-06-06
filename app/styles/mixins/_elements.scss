@@ -1,0 +1,8 @@
+@mixin image($src, $width, $height, $constraint:contain) {
+  @include size($width, $height);
+  @include text-hide;
+  display: block;
+  background: transparent url($src) no-repeat center center;
+  background-size: $constraint;
+  @content;
+}

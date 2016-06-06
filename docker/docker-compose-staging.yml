@@ -1,0 +1,10 @@
+version: '2'
+services:
+  web:
+    image: registry.meerkats.com.au:5000/projects.meerkats.com.au-nginx:staging
+    ports:
+      - "80"
+    environment:
+      VIRTUAL_HOST: projects.meerkats.staging.meerkats.com.au
+  node:
+    command: [ "npm", "run", "docker-staging" ]

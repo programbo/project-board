@@ -1,0 +1,9 @@
+.project-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  @include breakpoint($sm) {
+    bottom: 20px;
+  }
+}

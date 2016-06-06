@@ -1,0 +1,10 @@
+{
+  "site": {
+    "gtmId": "",
+    "hostname": "projects.meerkats.org.au",
+    "defaultSiteTitle": "Meerkats Projects"
+  },
+  "api": {
+    "mongo": "mongodb://localhost/meerkats-projects"
+  }
+}

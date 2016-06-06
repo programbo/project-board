@@ -1,0 +1,49 @@
+html {
+  font-size: $font-size-base;
+}
+
+body {
+  @include font-size(14px);
+  letter-spacing: -0.5px;
+  @include breakpoint($sm) {
+    @include font-size(16px);
+    letter-spacing: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  line-height: 1em;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+}
+
+a {
+  @include font(averta, light);
+  @include transition(background-color 200ms ease);
+  cursor: pointer;
+}
+
+.btn-default {
+  @include transition(color 300ms ease, background-color 300ms ease);
+  @include font(averta, bold);
+  padding: 15px 0;
+  border-width: 2px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  &:hover {
+    background-color: $btn-default-color;
+    color: color(white);
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "site": {
+    "hostname": "projects.staging.meerkats.com.au"
+  },
+  "form": {
+    "ambassadorFormEmailToAddress": "john@meerkats.com.au"
+  },
+  "api": {
+    "mongo": "mongodb://mongo/projects-staging"
+  },
+  "docker": {
+    "host": "docker2.meerkats.com.au",
+    "sitename": "projects.staging.meerkats.com.au"
+  }
+}
