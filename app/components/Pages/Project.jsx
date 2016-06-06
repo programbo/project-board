@@ -29,8 +29,8 @@ const Project = ({ routeParams: { brand, name } }) => {
       <IndexLink to="/" className="home-link hidden-xs"><span className="glyphicon glyphicon-th"/></IndexLink>
       <Header labeled project={project}/>
       <Team labeled project={project}/>
-      <Link className="project-link project-link-previous" to={projectPath(getPreviousProject(project))}><span className="glyphicon glyphicon-chevron-left"/></Link>
-      <Link className="project-link project-link-next" to={projectPath(getNextProject(project))}><span className="glyphicon glyphicon-chevron-right"/></Link>
+      <Link className="project-nav project-nav-previous" to={projectPath(getPreviousProject(project))}><span className="glyphicon glyphicon-chevron-left"/></Link>
+      <Link className="project-nav project-nav-next" to={projectPath(getNextProject(project))}><span className="glyphicon glyphicon-chevron-right"/></Link>
       <Footer labeled project={project}/>
     </div>
   );

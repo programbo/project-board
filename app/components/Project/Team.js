@@ -5,8 +5,6 @@ import { labelRotation, parseMembers } from './helpers';
 
 const createCanvas = (container, width, height = width) => (
   d3.select(container)
-    .append('svg')
-    .attr({ viewBox: `0 0 ${width}, ${height}` })
     .append('g')
     .attr({
       transform: `translate(${width / 2}, ${height / 2})`
@@ -89,7 +87,7 @@ export default class Team extends React.Component {
     return false;
   }
   render() {
-    return (<div className="team"><svg ref={(ref) => (this.container = ref)}/></div>);
+    return (<div className="team"><svg ref={(ref) => (this.container = ref)} viewBox="0 0 1000 1000"/></div>);
   }
 }
 
