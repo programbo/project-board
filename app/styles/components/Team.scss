@@ -15,6 +15,9 @@
     height: 100%;
     margin: 0 auto;
   }
+  // path {
+  //   opacity: 0.4;
+  // }
   text {
     @include font(averta, light);
     @include font-size(40px);
@@ -25,4 +28,8 @@
     @include font(averta, bold);
     letter-spacing: 1px;
   }
+}
+.team-view {
+  transform: translate(500px, 500px);
+  stroke: color(white);
 }

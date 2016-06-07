@@ -1,87 +1,89 @@
 import React, { PropTypes } from 'react';
 import d3 from 'd3';
+// import { parseMembers, drawlabels, drawTeam } from './helpers';
+import { parseMembers, createColourPalette } from './helpers';
 
-import { labelRotation, parseMembers } from './helpers';
+// const redrawTeam = ({ project, labeled }, node) => {
+//   const { team, topKat } = parseMembers(project);
+//   const teamView = d3.select(node)
+//     .selectAll('.member');
+//     // .data(pieLayout(team));
+//     // .enter();
+//
+//   drawTeam(teamView, team, project.colourSeed, 1000, labeled);
+//   if (labeled) {
+//     drawlabels(teamView, 1000, { topKat, project });
+//   }
+// };
+/* eslint-disable no-underscore-dangle */
+// function arcTween(a, arc) {
+//   const i = d3.interpolate(this._current, a);
+//   this._current = i(0);
+//   return (t) => arc(i(t));
+// }
 
-const createCanvas = (container, width, height = width) => (
-  d3.select(container)
-    .append('g')
-    .attr({
-      transform: `translate(${width / 2}, ${height / 2})`
-    })
+const wheelProperties = (project, labeled) => (
+  {
+    team: parseMembers(project).team,
+    color: createColourPalette(project.colourSeed),
+    strokeWidth: labeled ? 4 : 0,
+    pieLayout: d3.layout.pie().value(() => 1).sort(null),
+    arc: d3.svg.arc().innerRadius(labeled ? 200 : 0).outerRadius(1000 / 2)
+  }
 );
 
-const addTeamLabels = (selection, width, className, text) => (
-  selection
-    .append('text')
-    .classed(className, true)
-    .text(text)
-    .attr({
-      'text-anchor': 'middle',
-      transform: (d) => `rotate(${labelRotation(d)}) translate(0, -${width / 2.9}) rotate(-${labelRotation(d)})`
-    })
-);
-
-const addLabel = (svg, className, text) => svg
-  .append('text')
-  .attr('text-anchor', 'middle')
-  .classed(className, true)
-  .text(text);
-
-const createColourPalette = (seed) => {
-  const lightness = 0.9;
-  const saturation = 0.9;
-  return (i) => d3.hsl((seed - ((360 / 5) * i) % 360), lightness, saturation);
-};
-const drawTeam = (selection, seed, width, labeled) => {
-  const color = createColourPalette(seed);
-  const innerRadius = labeled ? width / 5 : 0;
-  const strokeWidth = labeled ? 4 : 0;
-  const arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(width / 2);
-  selection.append('path')
-    .classed('member', true)
+const drawProjectWheel = (node, { project, labeled }) => {
+  /* eslint-disable no-console */
+  const { team, color, strokeWidth, pieLayout, arc } = wheelProperties(project, labeled);
+  return d3.select(node)
+    .selectAll('path')
+    .data(pieLayout(team))
+    .enter()
+    .append('path')
+    // .classed('member', true)
     .attr({
       fill: (d, i) => color(i),
-      stroke: 'white',
       'stroke-width': strokeWidth,
       d: arc
     });
 };
-const drawlabels = (selection, width, data) => {
-  const { topKat, project } = data;
-  addTeamLabels(selection, 1000, 'member-position-label', ({ data: { position } }) => position).attr('dy', '-0.4em');
 
-  addTeamLabels(selection, 1000, 'member-name-label', ({ data: { name } }) => name).attr('dy', '1em');
-
-  addLabel(selection, 'top-kat-label center-label', 'Top Kat:').attr({
-    dy: '-2em'
-  });
-  addLabel(selection, 'top-kat-name center-label', topKat).attr({
-    dy: '-0.5em'
-  });
-  addLabel(selection, 'status-label center-label', 'Status:').attr({
-    dy: '1.5em'
-  });
-  addLabel(selection, 'status-name center-label', project.status).attr({
-    dy: '3em'
-  });
-};
-
-const redraw = ({ project, labeled }, container) => {
-  const { team, topKat } = parseMembers(project);
-  const pie = d3.layout.pie().value(() => 1).sort(null);
-  const svg = createCanvas(container, 1000);
-  const selection = svg.selectAll('path').data(pie(team)).enter();
-  drawTeam(selection, project.colourSeed, 1000, labeled);
-  labeled && drawlabels(selection, 1000, { topKat, project });
+const redrawProjectWheel = (projectWheel, { project, labeled }) => {
+  /* eslint-disable no-console */
+  const { team, pieLayout } = wheelProperties(project, labeled);
+  console.log(pieLayout(team));
+  pieLayout.value((d) => d);
+  const wheel = projectWheel.data(pieLayout(team));
+  console.log(wheel);
+  wheel.transition().duration(500);
+  // const wheel = projectWheel
+  //   // .selectAll('.member')
+  //   .data(pieLayout(team));
+  // wheel
+  //   .transition()
+  //   .duration(500);
+  // wheel
+  //   .enter()
+  //   .append('path')
+  //   // .classed('member', true)
+  //   .attr({
+  //     fill: (d, i) => color(i),
+  //     'stroke-width': strokeWidth,
+  //     d: arc
+  //   });
+  // console.log(wheel.exit());
+  // wheel
+  //   .exit()
+  //   .remove();
 };
 
 export default class Team extends React.Component {
   componentDidMount() {
-    redraw(this.props, this.container);
+    this.projectWheel = drawProjectWheel(this.teamView, this.props);
   }
-  componentWillReceiveProps() {
-    redraw(this.props, this.container);
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.project.brand);
+    redrawProjectWheel(this.projectWheel, nextProps);
   }
   shouldComponentUpdate() {
     return false;
@@ -89,8 +91,8 @@ export default class Team extends React.Component {
   render() {
     return (
       <div className="team">
-        <svg ref={(ref) => (this.container = ref)} viewBox="0 0 1000 1000">
-          <g className="team-view"/>
+        <svg viewBox="0 0 1000 1000">
+          <g className="team-view" ref={(ref) => (this.teamView = ref)}/>
         </svg>
       </div>
     );
