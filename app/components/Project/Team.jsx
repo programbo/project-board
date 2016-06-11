@@ -5,6 +5,7 @@ import d3 from 'd3';
 import { createColourPalette } from './helpers';
 
 let currentLayout;
+// let currentColours;
 const wheelProperties = ({ colourSeed, team }, labeled) => (
   {
     team: team.map((member) => ({ ...member, included: member.name ? 1 : 0 })),
@@ -38,12 +39,13 @@ const redrawProjectWheel = (projectWheel, { project, labeled }) => {
     currentLayout[i] = interpolator(0);
     return (t) => arc(interpolator(t));
   };
+  const colourTween = (d, i, a) => d3.interpolate(a, d);
   const wheel = projectWheel
-    .data(pieLayout(team))
-    .attr('fill', (d, i) => color(i));
+    .data(pieLayout(team));
   wheel
     .transition()
-    .duration(300)
+    .duration(500)
+    .attr('fill', (d, i) => color(i))
     .attrTween('d', arcTween);
 };
 
