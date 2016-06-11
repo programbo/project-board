@@ -74,31 +74,48 @@ const addTeamLabels = (selection, width, className, text) => (
 //   .attr('text-anchor', 'middle')
 //   .classed(className, true)
 //   .text(text);
+/* eslint-disable no-console */
 
-export const createColourPalette = (seed) => {
+export const createColourPalette = (seed, team) => {
   const lightness = 0.9;
   const saturation = 0.9;
-  return (i) => d3.hsl((seed - ((360 / 5) * i) % 360), lightness, saturation);
+  let counter = 0;
+  const steps = team.reduce((previous, { name }) => {
+    if (!!name) {
+      return previous + 1;
+    }
+    return previous;
+  }, 0);
+  const colours = team.reduce((previous, { name }) => {
+    const colour = d3.hsl((seed - ((360 / steps) * counter) % 360), lightness, saturation);
+    if (!!name) {
+      counter += 1;
+    }
+    previous.push(colour);
+    return previous;
+  }, []);
+  return (i) => colours[i];
 };
-export const drawTeam = (teamView, team, seed, width, labeled) => {
-  const color = createColourPalette(seed);
-  const innerRadius = labeled ? width / 5 : 0;
-  const strokeWidth = labeled ? 4 : 0;
-  const pieLayout = d3.layout.pie().value(() => 1).sort(null);
-  const arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(width / 2);
-  const view = teamView
-    .data(pieLayout(team))
-    .enter()
-    .append('path');
-  teamView
-    .classed('member', true)
-    .attr({
-      fill: (d, i) => color(i),
-      'stroke-width': strokeWidth,
-      d: arc
-    });
-  view.exit().remove();
-};
+
+// export const drawTeam = (teamView, team, seed, width, labeled) => {
+//   const color = createColourPalette(seed);
+//   const innerRadius = labeled ? width / 5 : 0;
+//   const strokeWidth = labeled ? 4 : 0;
+//   const pieLayout = d3.layout.pie().value(() => 1).sort(null);
+//   const arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(width / 2);
+//   const view = teamView
+//     .data(pieLayout(team))
+//     .enter()
+//     .append('path');
+//   teamView
+//     .classed('member', true)
+//     .attr({
+//       fill: (d, i) => color(i),
+//       'stroke-width': strokeWidth,
+//       d: arc
+//     });
+//   view.exit().remove();
+// };
 
 export const drawlabels = (selection) => {
   // const { topKat, project } = data;
