@@ -58,12 +58,13 @@ export const sortProjects = (unsortedProjects) => (
   unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
 );
 
-const addTeamLabels = (selection, width, className, text) => (
+export const addMemberLabels = (selection, width, className, text) => (
   selection
     .append('text')
     .classed(className, true)
     .text(text)
     .attr({
+      stroke: 'none',
       'text-anchor': 'middle',
       transform: (d) => `rotate(${labelRotation(d)}) translate(0, -${width / 2.9}) rotate(-${labelRotation(d)})`
     })
@@ -74,7 +75,6 @@ const addTeamLabels = (selection, width, className, text) => (
 //   .attr('text-anchor', 'middle')
 //   .classed(className, true)
 //   .text(text);
-/* eslint-disable no-console */
 
 export const createColourPalette = (seed, team) => {
   const lightness = 0.9;
@@ -107,11 +107,11 @@ export const wheelProperties = ({ colourSeed, team }, labeled) => (
   }
 );
 
-export const drawlabels = (selection) => {
+// export const drawlabels = (selection) => {
   // const { topKat, project } = data;
-  addTeamLabels(selection, 1000, 'member-position-label', ({ data: { position } }) => position).attr('dy', '-0.4em');
+  // addTeamLabels(selection, 1000, 'member-position-label', ({ data: { position } }) => position).attr('dy', '-0.4em');
 
-  addTeamLabels(selection, 1000, 'member-name-label', ({ data: { name } }) => name).attr('dy', '1em');
+  // addTeamLabels(selection, 1000, 'member-name-label', ({ data: { name } }) => name).attr('dy', '1em');
 
   // addLabel(selection, 'top-kat-label center-label', 'Top Kat:').attr({
   //   dy: '-2em'
@@ -125,4 +125,4 @@ export const drawlabels = (selection) => {
   // addLabel(selection, 'status-name center-label', project.status).attr({
   //   dy: '3em'
   // });
-};
+// };
