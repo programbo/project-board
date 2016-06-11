@@ -2,63 +2,55 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import d3 from 'd3';
-import { createColourPalette } from './helpers';
-
-let currentLayout;
-// let currentColours;
-const wheelProperties = ({ colourSeed, team }, labeled) => (
-  {
-    team: team.map((member) => ({ ...member, included: member.name ? 1 : 0 })),
-    color: createColourPalette(colourSeed, team),
-    strokeWidth: labeled ? 4 : 0,
-    pieLayout: d3.layout.pie().value((d) => d.included).sort(null),
-    arc: d3.svg.arc().innerRadius(labeled ? (1000 / 5) : 0).outerRadius(1000 / 2)
-  }
-);
-
-const drawProjectWheel = (node, { project, labeled }) => {
-  const { team, color, strokeWidth, pieLayout, arc } = wheelProperties(project, labeled);
-  currentLayout = pieLayout(team);
-  return d3.select(node)
-    .selectAll('path')
-    .data(currentLayout)
-    .enter()
-    .append('path')
-    .classed('member', true)
-    .attr({
-      fill: (d, i) => color(i),
-      'stroke-width': strokeWidth,
-      d: arc
-    });
-};
-
-const redrawProjectWheel = (projectWheel, { project, labeled }) => {
-  const { team, color, pieLayout, arc } = wheelProperties(project, labeled);
-  const arcTween = (a, i) => {
-    const interpolator = d3.interpolate(currentLayout[i], a);
-    currentLayout[i] = interpolator(0);
-    return (t) => arc(interpolator(t));
-  };
-  const colourTween = (d, i, a) => d3.interpolate(a, d);
-  const wheel = projectWheel
-    .data(pieLayout(team));
-  wheel
-    .transition()
-    .duration(500)
-    .attr('fill', (d, i) => color(i))
-    .attrTween('d', arcTween);
-};
+import { wheelProperties, createColourPalette } from './helpers';
 
 class Team extends React.Component {
+  constructor(props) {
+    super(props);
+    this.drawProjectWheel = this.drawProjectWheel.bind(this);
+    this.redrawProjectWheel = this.redrawProjectWheel.bind(this);
+  }
   componentDidMount() {
-    this.projectWheel = drawProjectWheel(this.teamView, this.props);
+    this.projectWheel = this.drawProjectWheel(this.teamView, this.props);
   }
   componentWillReceiveProps(nextProps) {
-    redrawProjectWheel(this.projectWheel, nextProps);
+    this.redrawProjectWheel(this.projectWheel, nextProps);
   }
   shouldComponentUpdate() {
     return false;
   }
+  drawProjectWheel(node, { project, labeled }) {
+    const { team, color, strokeWidth, pieLayout, arc } = wheelProperties(project, labeled);
+    this.currentLayout = pieLayout(team);
+    return d3.select(node)
+      .selectAll('path')
+      .data(this.currentLayout)
+      .enter()
+      .append('path')
+      .classed('member', true)
+      .attr({
+        fill: (d, i) => color(i),
+        'stroke-width': strokeWidth,
+        d: arc
+      });
+  }
+  redrawProjectWheel(projectWheel, { project, labeled }) {
+    const { team, color, pieLayout, arc } = wheelProperties(project, labeled);
+    const arcTween = (a, i) => {
+      const interpolator = d3.interpolate(this.currentLayout[i], a);
+      this.currentLayout[i] = interpolator(0);
+      return (t) => arc(interpolator(t));
+    };
+    const colourTween = (d, i, a) => d3.interpolate(a, d);
+    const wheel = projectWheel
+      .data(pieLayout(team));
+    wheel
+      .transition()
+      .duration(500)
+      .attr('fill', (d, i) => color(i))
+      .attrTween('d', arcTween);
+  }
+
   render() {
     return (
       <div className="team">

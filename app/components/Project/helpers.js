@@ -97,25 +97,15 @@ export const createColourPalette = (seed, team) => {
   return (i) => colours[i];
 };
 
-// export const drawTeam = (teamView, team, seed, width, labeled) => {
-//   const color = createColourPalette(seed);
-//   const innerRadius = labeled ? width / 5 : 0;
-//   const strokeWidth = labeled ? 4 : 0;
-//   const pieLayout = d3.layout.pie().value(() => 1).sort(null);
-//   const arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(width / 2);
-//   const view = teamView
-//     .data(pieLayout(team))
-//     .enter()
-//     .append('path');
-//   teamView
-//     .classed('member', true)
-//     .attr({
-//       fill: (d, i) => color(i),
-//       'stroke-width': strokeWidth,
-//       d: arc
-//     });
-//   view.exit().remove();
-// };
+export const wheelProperties = ({ colourSeed, team }, labeled) => (
+  {
+    team: team.map((member) => ({ ...member, included: member.name ? 1 : 0 })),
+    color: createColourPalette(colourSeed, team),
+    strokeWidth: labeled ? 4 : 0,
+    pieLayout: d3.layout.pie().value((d) => d.included).sort(null),
+    arc: d3.svg.arc().innerRadius(labeled ? (1000 / 5) : 0).outerRadius(1000 / 2)
+  }
+);
 
 export const drawlabels = (selection) => {
   // const { topKat, project } = data;
