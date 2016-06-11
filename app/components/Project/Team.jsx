@@ -1,88 +1,56 @@
+/* eslint-disable no-console, no-unused-vars */
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import d3 from 'd3';
-// import { parseMembers, drawlabels, drawTeam } from './helpers';
-import { parseMembers, createColourPalette } from './helpers';
+import { createColourPalette } from './helpers';
 
-// const redrawTeam = ({ project, labeled }, node) => {
-//   const { team, topKat } = parseMembers(project);
-//   const teamView = d3.select(node)
-//     .selectAll('.member');
-//     // .data(pieLayout(team));
-//     // .enter();
-//
-//   drawTeam(teamView, team, project.colourSeed, 1000, labeled);
-//   if (labeled) {
-//     drawlabels(teamView, 1000, { topKat, project });
-//   }
-// };
-/* eslint-disable no-underscore-dangle */
-// function arcTween(a, arc) {
-//   const i = d3.interpolate(this._current, a);
-//   this._current = i(0);
-//   return (t) => arc(i(t));
-// }
-
-const wheelProperties = (project, labeled) => (
+let current;
+const wheelProperties = ({ colourSeed, team }, labeled) => (
   {
-    team: parseMembers(project).team,
-    color: createColourPalette(project.colourSeed),
+    team: team.map((member) => ({ ...member, included: member.name ? 1 : 0 })),
+    color: createColourPalette(colourSeed),
     strokeWidth: labeled ? 4 : 0,
-    pieLayout: d3.layout.pie().value(() => 1).sort(null),
+    pieLayout: d3.layout.pie().value((d) => d.included).sort(null),
     arc: d3.svg.arc().innerRadius(labeled ? 200 : 0).outerRadius(1000 / 2)
   }
 );
 
 const drawProjectWheel = (node, { project, labeled }) => {
-  /* eslint-disable no-console */
   const { team, color, strokeWidth, pieLayout, arc } = wheelProperties(project, labeled);
   return d3.select(node)
     .selectAll('path')
     .data(pieLayout(team))
     .enter()
     .append('path')
-    // .classed('member', true)
+    .classed('member', true)
     .attr({
       fill: (d, i) => color(i),
       'stroke-width': strokeWidth,
       d: arc
+    })
+    .each((d) => {
+      current = d;
     });
 };
 
 const redrawProjectWheel = (projectWheel, { project, labeled }) => {
-  /* eslint-disable no-console */
-  const { team, pieLayout } = wheelProperties(project, labeled);
-  console.log(pieLayout(team));
-  pieLayout.value((d) => d);
+  const { team, pieLayout, arc } = wheelProperties(project, labeled);
+  const arcTween = (a) => {
+    const i = d3.interpolate(current, a);
+    current = i(0);
+    return function y(t) {
+      return arc(i(t));
+    };
+  };
   const wheel = projectWheel.data(pieLayout(team));
-  console.log(wheel);
-  wheel.transition().duration(500);
-  // const wheel = projectWheel
-  //   // .selectAll('.member')
-  //   .data(pieLayout(team));
-  // wheel
-  //   .transition()
-  //   .duration(500);
-  // wheel
-  //   .enter()
-  //   .append('path')
-  //   // .classed('member', true)
-  //   .attr({
-  //     fill: (d, i) => color(i),
-  //     'stroke-width': strokeWidth,
-  //     d: arc
-  //   });
-  // console.log(wheel.exit());
-  // wheel
-  //   .exit()
-  //   .remove();
+  wheel.transition().duration(300).attrTween('d', arcTween);
 };
 
-export default class Team extends React.Component {
+class Team extends React.Component {
   componentDidMount() {
     this.projectWheel = drawProjectWheel(this.teamView, this.props);
   }
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.project.brand);
     redrawProjectWheel(this.projectWheel, nextProps);
   }
   shouldComponentUpdate() {
@@ -108,3 +76,5 @@ Team.propTypes = {
   project: PropTypes.object.isRequired,
   labeled: PropTypes.bool
 };
+
+export default Team;

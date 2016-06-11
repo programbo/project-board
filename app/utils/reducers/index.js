@@ -1,29 +1,12 @@
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
 import { routerReducer as routing } from 'react-router-redux';
-import contact from './contact';
-import error from './error';
-import facebook from './facebook';
-import getInTouch from './getInTouch';
-import lightbox from './lightbox';
-import mainMenu from './mainMenu';
-import news from './news';
-import registration from './registration';
-import success from './success';
+import activeProject from './activeProject';
+import projects from './projects';
 
-
-const app = combineReducers({
-  contact,
-  error,
-  getInTouch,
-  facebook,
-  lightbox,
-  mainMenu,
-  news,
+export default combineReducers({
   form,
-  registration,
-  routing,
-  success
+  activeProject,
+  projects,
+  routing
 });
-
-export default app;

@@ -1,39 +1,62 @@
 import d3 from 'd3';
 import { compareBy, simpleSlug } from '../../utils/helpers';
 
+export const projectPath = ({ brand, name }, prefix = 'project') => (
+  `/${prefix}/${simpleSlug(brand)}/${simpleSlug(name)}`
+);
+
+export const normalizeProjects = (projects) => {
+  let allPositions = [];
+  const uniquePostions = {};
+  projects.forEach(({ members }) => {
+    allPositions = [...allPositions, ...members];
+  });
+  allPositions.forEach(({ position }) => {
+    uniquePostions[position] = '';
+  });
+  return projects.map((project) => {
+    const projectPostions = {};
+    project.members.forEach(({ position, name }) => {
+      projectPostions[position] = name;
+    });
+    const completePositions = { ...uniquePostions, ...projectPostions };
+    const members = Object.keys(completePositions).map((position) => ({
+      position, name: completePositions[position]
+    }));
+
+    return { ...project, members, path: projectPath(project) };
+  });
+};
+
 export const labelRotation = ({ startAngle, endAngle }) => (180 / Math.PI) * (startAngle + ((endAngle - startAngle) / 2));
 
-export const parseMembers = ({ members }) => {
-  const project = {};
-  const team = [];
-  members.forEach(({ position, name }) => {
-    switch (position) {
-    case 'Top Kat':
-      project.topKat = name;
-      break;
-    case 'Owner':
-      project.owner = name;
-      break;
-    case 'Manager':
-      project.manager = name;
-      break;
-    default:
-      team.push({ position, name });
-    }
-  });
-  team.sort(compareBy(['position']));
-  return { team, ...project };
-};
+export const parseMembers = (projects) => (
+  projects.map((project) => {
+    const team = [];
+    const members = {};
+    project.members.forEach(({ position, name }) => {
+      switch (position) {
+      case 'Top Kat':
+        members.topKat = name;
+        break;
+      case 'Owner':
+        members.owner = name;
+        break;
+      case 'Manager':
+        members.manager = name;
+        break;
+      default:
+        team.push({ position, name });
+      }
+    });
+    team.sort(compareBy(['position']));
+    return { team, ...members, ...project };
+  })
+);
 
 export const sortProjects = (unsortedProjects) => (
   unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
 );
-
-export const projectPath = (project) => {
-  const { brand, name } = project;
-  const path = `/project/${simpleSlug(brand)}/${simpleSlug(name)}`;
-  return path;
-};
 
 const addTeamLabels = (selection, width, className, text) => (
   selection
@@ -63,9 +86,6 @@ export const drawTeam = (teamView, team, seed, width, labeled) => {
   const strokeWidth = labeled ? 4 : 0;
   const pieLayout = d3.layout.pie().value(() => 1).sort(null);
   const arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(width / 2);
-
-  /* eslint-disable no-console */
-  // console.log(pieLayout(team));
   const view = teamView
     .data(pieLayout(team))
     .enter()
@@ -77,7 +97,6 @@ export const drawTeam = (teamView, team, seed, width, labeled) => {
       'stroke-width': strokeWidth,
       d: arc
     });
-  console.log(3, teamView);
   view.exit().remove();
 };
 

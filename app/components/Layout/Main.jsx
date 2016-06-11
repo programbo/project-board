@@ -1,26 +1,42 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import getPageData, { defaultPageData } from '../../data/data';
 import { SiteHeader, SiteContent, SiteFooter } from '.';
 import { updateMetadata } from '../../utils/helpers';
+import { setProjects } from '../../utils/actions';
 
-const Main = ({ children, location: { pathname } }) => {
-  const pageData = getPageData(pathname) || defaultPageData;
-  updateMetadata(pageData);
+import { projects } from '../../data/projects';
+import { parseMembers, sortProjects, normalizeProjects } from '../Project/helpers';
 
-  return (
-    <div className="main">
-      <SiteHeader/>
-      <SiteContent pageData={pageData}>{children}</SiteContent>
-      <SiteFooter/>
-    </div>
-  );
-};
+const mapStateToProps = ({ routing }) => ({
+  routing
+});
+
+class Main extends React.Component {
+  componentWillMount() {
+    const { dispatch, routing: { locationBeforeTransitions: { pathname } } } = this.props;
+
+    this.pageData = getPageData(pathname) || defaultPageData;
+    updateMetadata(this.pageData);
+    dispatch(setProjects(sortProjects(parseMembers(normalizeProjects(projects)))));
+  }
+  render() {
+    return (
+      <div className="main">
+        <SiteHeader/>
+        <SiteContent pageData={this.pageData}>{this.props.children}</SiteContent>
+        <SiteFooter/>
+      </div>
+    );
+  }
+}
 
 Main.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
-  location: PropTypes.object
+  dispatch: PropTypes.func,
+  routing: PropTypes.object
 };
 
-export default Main;
+export default connect(mapStateToProps)(Main);
