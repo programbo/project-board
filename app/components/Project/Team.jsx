@@ -1,17 +1,12 @@
-/* eslint-disable no-console, no-unused-vars */
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 import d3 from 'd3';
-import { wheelProperties, createColourPalette, addMemberLabels, labelRotation } from './helpers';
+import { wheelProperties, updateLabel, labelRotation } from './helpers';
 
 class Team extends React.Component {
   constructor(props) {
     super(props);
     this.drawProjectWheel = this.drawProjectWheel.bind(this);
-    this.drawPositionLabels = this.drawPositionLabels.bind(this);
     this.updateProjectWheel = this.updateProjectWheel.bind(this);
-    this.updatePositionLabels = this.updatePositionLabels.bind(this);
-    this.updateNameLabels = this.updateNameLabels.bind(this);
   }
   componentDidMount() {
     this.projectWheel = this.drawProjectWheel(this.teamView, this.props);
@@ -39,9 +34,9 @@ class Team extends React.Component {
         d: arc
       });
   }
-  drawPositionLabels(node, { project }) {
+  drawPositionLabels(node) {
     const positionLabels = d3.select(node)
-      .selectAll('g.position-label')
+      .selectAll('.position-label')
       .data(this.currentLayout);
     positionLabels
       .enter()
@@ -55,9 +50,9 @@ class Team extends React.Component {
       .text((d) => d.data.position);
     return positionLabels;
   }
-  drawNameLabels(node, { project }) {
+  drawNameLabels(node) {
     const nameLabels = d3.select(node)
-      .selectAll('g.name-label')
+      .selectAll('.name-label')
       .data(this.currentLayout);
     nameLabels
       .enter()
@@ -73,37 +68,19 @@ class Team extends React.Component {
   }
   updateProjectWheel({ project, labeled }) {
     const { team, color, pieLayout, arc } = wheelProperties(project, labeled);
+    const teamData = pieLayout(team);
     this.projectWheel
-      .data(pieLayout(team))
+      .data(teamData)
       .transition()
-      .duration(500)
+      .duration(300)
       .attr('fill', (d, i) => color(i))
       .attrTween('d', (a, i) => {
         const interpolator = d3.interpolate(this.currentLayout[i], a);
         this.currentLayout[i] = interpolator(0);
         return (t) => arc(interpolator(t));
       });
-    this.updatePositionLabels({ project, labeled });
-    this.updateNameLabels({ project, labeled });
-  }
-  updatePositionLabels({ project, labeled }) {
-    const { team, color, pieLayout, arc } = wheelProperties(project, labeled);
-    this.positionLabels
-      .data(pieLayout(team))
-      .transition()
-      .duration((d) => d.value * 500)
-      .attr('transform', (d) => `rotate(${labelRotation(d)}) translate(0, -${1000 / 2.9}) rotate(-${labelRotation(d)})`)
-      .style('opacity', (d) => d.value)
-      .text((d) => d.data.position);
-  }
-  updateNameLabels({ project, labeled }) {
-    const { team, color, pieLayout, arc } = wheelProperties(project, labeled);
-    this.nameLabels
-      .data(pieLayout(team))
-      .transition()
-      .duration((d) => d.value * 500)
-      .attr('transform', (d) => `rotate(${labelRotation(d)}) translate(0, -${1000 / 2.9}) rotate(-${labelRotation(d)})`)
-      .text((d) => d.data.name);
+    updateLabel(this.positionLabels, teamData, (d) => d.data.position);
+    updateLabel(this.nameLabels, teamData, (d) => d.data.name);
   }
 
   render() {

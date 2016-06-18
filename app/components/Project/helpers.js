@@ -88,3 +88,14 @@ export const wheelProperties = ({ colourSeed, team }, labeled) => (
     arc: d3.svg.arc().innerRadius(labeled ? (1000 / 5) : 0).outerRadius(1000 / 2)
   }
 );
+
+export const updateLabel = (label, data, text) => {
+  label
+    .data(data)
+    .transition()
+    .duration((d) => d.value * 300)
+    .attr('transform', (d) => `rotate(${labelRotation(d)}) translate(0, -${1000 / 2.9}) rotate(-${labelRotation(d)})`)
+    .style('opacity', (d) => d.value)
+    .text(text);
+  return label;
+};
