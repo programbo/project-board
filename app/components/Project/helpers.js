@@ -58,24 +58,6 @@ export const sortProjects = (unsortedProjects) => (
   unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
 );
 
-export const addMemberLabels = (selection, width, className, text) => (
-  selection
-    .append('text')
-    .classed(className, true)
-    .text(text)
-    .attr({
-      stroke: 'none',
-      'text-anchor': 'middle',
-      transform: (d) => `rotate(${labelRotation(d)}) translate(0, -${width / 2.9}) rotate(-${labelRotation(d)})`
-    })
-);
-
-// const addLabel = (svg, className, text) => svg
-//   .append('text')
-//   .attr('text-anchor', 'middle')
-//   .classed(className, true)
-//   .text(text);
-
 export const createColourPalette = (seed, team) => {
   const lightness = 0.9;
   const saturation = 0.9;
@@ -106,23 +88,3 @@ export const wheelProperties = ({ colourSeed, team }, labeled) => (
     arc: d3.svg.arc().innerRadius(labeled ? (1000 / 5) : 0).outerRadius(1000 / 2)
   }
 );
-
-// export const drawlabels = (selection) => {
-  // const { topKat, project } = data;
-  // addTeamLabels(selection, 1000, 'member-position-label', ({ data: { position } }) => position).attr('dy', '-0.4em');
-
-  // addTeamLabels(selection, 1000, 'member-name-label', ({ data: { name } }) => name).attr('dy', '1em');
-
-  // addLabel(selection, 'top-kat-label center-label', 'Top Kat:').attr({
-  //   dy: '-2em'
-  // });
-  // addLabel(selection, 'top-kat-name center-label', topKat).attr({
-  //   dy: '-0.5em'
-  // });
-  // addLabel(selection, 'status-label center-label', 'Status:').attr({
-  //   dy: '1.5em'
-  // });
-  // addLabel(selection, 'status-name center-label', project.status).attr({
-  //   dy: '3em'
-  // });
-// };
