@@ -5,6 +5,11 @@
     left: 20px;
     z-index: 1;
   }
+  .project-label {
+    &:nth-child(even) {
+      font-weight: bold;
+    }
+  }
   .glyphicon {
     @include font-size(40px);
     @include transition(opacity 100ms ease);

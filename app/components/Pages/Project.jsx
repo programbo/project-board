@@ -17,7 +17,7 @@ class Project extends React.Component {
   }
   componentDidMount() {
     const { dispatch, projects } = this.props;
-    $(document).keydown((e) => {
+    $(document).off('keydown').on('keydown', (e) => {
       switch (e.which) {
       case 37:
         dispatch(push(this.getPreviousProject(projects, this.project).path));

@@ -7,7 +7,7 @@ import { updateMetadata } from '../../utils/helpers';
 import { setProjects } from '../../utils/actions';
 
 import { projects } from '../../data/projects';
-import { parseMembers, sortProjects, normalizeProjects } from '../Project/helpers';
+import { normalizeProjects } from '../Project/helpers';
 
 const mapStateToProps = ({ routing }) => ({
   routing
@@ -19,7 +19,7 @@ class Main extends React.Component {
 
     this.pageData = getPageData(pathname) || defaultPageData;
     updateMetadata(this.pageData);
-    dispatch(setProjects(sortProjects(parseMembers(normalizeProjects(projects)))));
+    dispatch(setProjects(normalizeProjects(projects)));
   }
   render() {
     return (

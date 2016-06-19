@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import d3 from 'd3';
 import { wheelProperties, updateLabel, labelRotation } from './helpers';
 
+/* eslint-disable no-console */
 class Team extends React.Component {
   constructor(props) {
     super(props);
@@ -10,8 +11,11 @@ class Team extends React.Component {
   }
   componentDidMount() {
     this.projectWheel = this.drawProjectWheel(this.teamView, this.props);
-    this.positionLabels = this.drawPositionLabels(this.teamView, this.props);
-    this.nameLabels = this.drawNameLabels(this.teamView, this.props);
+    if (this.props.labeled) {
+      this.projectLabels = this.drawProjectLabels(this.teamView, this.props);
+      this.positionLabels = this.drawPositionLabels(this.teamView, this.props);
+      this.nameLabels = this.drawNameLabels(this.teamView, this.props);
+    }
   }
   componentWillReceiveProps(nextProps) {
     this.updateProjectWheel(nextProps);
@@ -33,6 +37,30 @@ class Team extends React.Component {
         'stroke-width': strokeWidth,
         d: arc
       });
+  }
+  drawProjectLabels(node, { project: { label: labelData } }) {
+    const verticalOffset = (d, i) => {
+      const groupOffset = i <= 1 ? -0.2 : 0.2;
+      return `${(i * 1.5) - 1.9 + groupOffset}em`;
+    };
+    const projectLabels = d3.select(node)
+      .selectAll('.project-label')
+      .data(labelData);
+    projectLabels
+      .enter()
+      .append('text')
+      .attr('class', 'project-label')
+      .attr('text-anchor', 'middle')
+      .attr('dy', verticalOffset)
+      .style('stroke', 'none')
+      .text((d) => d);
+    d3.select(node)
+      .append('line')
+      .attr('class', 'project-labels-divider')
+      .attr({ x1: -150, y1: 0, x2: 150, y2: 0 })
+      .style('stroke', 'black')
+      .style('opacity', '0.15');
+    return projectLabels;
   }
   drawPositionLabels(node) {
     const positionLabels = d3.select(node)
@@ -79,8 +107,22 @@ class Team extends React.Component {
         this.currentLayout[i] = interpolator(0);
         return (t) => arc(interpolator(t));
       });
-    updateLabel(this.positionLabels, teamData, (d) => d.data.position);
-    updateLabel(this.nameLabels, teamData, (d) => d.data.name);
+    if (labeled) {
+      this.updateProjectLabels(project);
+      updateLabel(this.positionLabels, teamData, (d) => d.data.position);
+      updateLabel(this.nameLabels, teamData, (d) => d.data.name);
+    }
+  }
+  updateProjectLabels(project) {
+    this.projectLabels
+      .data(project.label)
+      .transition()
+      .duration(150)
+      .style('opacity', (d, i) => ((i % 2) ? 0 : 1))
+      .transition()
+      .duration(150)
+      .style('opacity', 1)
+      .text((d) => d);
   }
 
   render() {

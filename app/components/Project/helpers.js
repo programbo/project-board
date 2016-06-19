@@ -5,6 +5,37 @@ export const projectPath = ({ brand, name }, prefix = 'project') => (
   `/${prefix}/${simpleSlug(brand)}/${simpleSlug(name)}`
 );
 
+const sortProjects = (unsortedProjects) => (
+  unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
+);
+
+const addProjectLabel = (project) => ({
+  ...project,
+  label: ['Top Kat:', project.topKat, 'Status:', project.status]
+});
+
+export const parseMembers = (project) => {
+  const team = [];
+  const members = {};
+  project.members.forEach(({ position, name }) => {
+    switch (position) {
+    case 'Top Kat':
+      members.topKat = name;
+      break;
+    case 'Owner':
+      members.owner = name;
+      break;
+    case 'Manager':
+      members.manager = name;
+      break;
+    default:
+      team.push({ position, name });
+    }
+  });
+  team.sort(compareBy(['position']));
+  return addProjectLabel({ team, ...members, ...project });
+};
+
 export const normalizeProjects = (projects) => {
   let allPositions = [];
   const uniquePostions = {};
@@ -14,7 +45,7 @@ export const normalizeProjects = (projects) => {
   allPositions.forEach(({ position }) => {
     uniquePostions[position] = '';
   });
-  return projects.map((project) => {
+  return sortProjects(projects.map((project) => {
     const projectPostions = {};
     project.members.forEach(({ position, name }) => {
       projectPostions[position] = name;
@@ -24,39 +55,11 @@ export const normalizeProjects = (projects) => {
       position, name: completePositions[position]
     }));
 
-    return { ...project, members, path: projectPath(project) };
-  });
+    return parseMembers({ ...project, members, path: projectPath(project) });
+  }));
 };
 
 export const labelRotation = ({ startAngle, endAngle }) => (180 / Math.PI) * (startAngle + ((endAngle - startAngle) / 2));
-
-export const parseMembers = (projects) => (
-  projects.map((project) => {
-    const team = [];
-    const members = {};
-    project.members.forEach(({ position, name }) => {
-      switch (position) {
-      case 'Top Kat':
-        members.topKat = name;
-        break;
-      case 'Owner':
-        members.owner = name;
-        break;
-      case 'Manager':
-        members.manager = name;
-        break;
-      default:
-        team.push({ position, name });
-      }
-    });
-    team.sort(compareBy(['position']));
-    return { team, ...members, ...project };
-  })
-);
-
-export const sortProjects = (unsortedProjects) => (
-  unsortedProjects.sort(compareBy(['client', 'brand', 'name']))
-);
 
 export const createColourPalette = (seed, team) => {
   const lightness = 0.9;
