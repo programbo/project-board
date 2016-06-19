@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { setSearchTerm } from '../../utils/actions';
+import { setSearchTerm, showSearchField } from '../../utils/actions';
 
 const mapStateToProps = () => ({});
 const mapDispatchToProps = (dispatch, { project: { brand } }) => ({
   onClickClient: () => {
     dispatch(setSearchTerm(brand));
+    dispatch(showSearchField());
     dispatch(push('/'));
   }
 });

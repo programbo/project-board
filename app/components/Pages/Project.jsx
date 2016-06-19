@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import { Header, Footer, Team } from '../Project';
 import { filteredProjects } from '../Project/helpers';
 import { simpleSlug } from '../../utils/helpers';
-import { setSearchTerm } from '../../utils/actions';
+import { setSearchTerm, showSearchField } from '../../utils/actions';
 
 const mapStateToProps = ({ projects, search }) => ({
   projects,
@@ -56,6 +56,7 @@ class Project extends React.Component {
   handleSearchTerm(searchTerm) {
     const { dispatch } = this.props;
     dispatch(setSearchTerm(searchTerm));
+    dispatch(showSearchField());
     dispatch(push('/'));
   }
 

@@ -3,7 +3,7 @@ export default (state = '', { type, searchTerm = '' }) => {
   case 'SET_SEARCH_TERM':
     return searchTerm;
   case 'CLEAR_SEARCH_TERM':
-    return {};
+    return '';
   default:
     return state;
   }
