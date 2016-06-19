@@ -1,6 +1,15 @@
 import d3 from 'd3';
 import { compareBy, simpleSlug } from '../../utils/helpers';
 
+export const filteredProjects = (projects, search) => (
+  search ? projects.filter((project) => (
+    Object.values(project)
+      .filter((item) => typeof item === 'string')
+      .some((item) => item.includes(search))
+    || project.team.some(({ name }) => name.includes(search))
+  )) : projects
+);
+
 export const projectPath = ({ brand, name }, prefix = 'project') => (
   `/${prefix}/${simpleSlug(brand)}/${simpleSlug(name)}`
 );

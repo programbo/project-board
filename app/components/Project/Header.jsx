@@ -1,16 +1,32 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
-const Header = ({ project: { brand, name, owner, manager } }) => (
+import { setSearchTerm } from '../../utils/actions';
+
+const mapStateToProps = () => ({});
+const mapDispatchToProps = (dispatch, { project: { brand } }) => ({
+  onClickClient: () => {
+    dispatch(setSearchTerm(brand));
+    dispatch(push('/'));
+  }
+});
+
+const Header = ({ onClickClient, project: { brand, name, owner, manager } }) => (
   <header className="project-header">
-    <h3>{brand}</h3>
-    <h1>{name}</h1>
-    <h5><strong>Owner:</strong> {owner}</h5>
-    <h5><strong>Manager:</strong> {manager}</h5>
+    <h3 className="header-brand" onClick={onClickClient}>{brand}</h3>
+    <h1 className="header-name">{name}</h1>
+    <h5 className="header-owner"><strong>Owner:</strong> {owner}</h5>
+    <h5 className="header-manager"><strong>Manager:</strong> {manager}</h5>
   </header>
 );
 
 Header.propTypes = {
-  project: PropTypes.object.isRequired
+  project: PropTypes.object.isRequired,
+  onClickClient: PropTypes.func
 };
 
-export default Header;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header);

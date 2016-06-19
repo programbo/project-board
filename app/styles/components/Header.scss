@@ -4,7 +4,11 @@
   width: 100%;
   text-align: center;
 
-  h2 {
+  .header-brand {
+    cursor: pointer;
     font-style: italic;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

@@ -49,11 +49,16 @@ class Team extends React.Component {
     projectLabels
       .enter()
       .append('text')
-      .attr('class', 'project-label')
+      .attr('class', (d, i) => `project-label project-label-${i}`)
       .attr('text-anchor', 'middle')
       .attr('dy', verticalOffset)
       .style('stroke', 'none')
-      .text((d) => d);
+      .text((d) => d)
+      .on('click', (d, i) => {
+        if (i === 1) {
+          this.props.onClickName(d);
+        }
+      });
     d3.select(node)
       .append('line')
       .attr('class', 'project-labels-divider')
@@ -79,6 +84,7 @@ class Team extends React.Component {
     return positionLabels;
   }
   drawNameLabels(node) {
+    const { onClickName } = this.props;
     const nameLabels = d3.select(node)
       .selectAll('.name-label')
       .data(this.currentLayout);
@@ -90,8 +96,12 @@ class Team extends React.Component {
       .attr('dy', '1em')
       .attr('transform', (d) => `rotate(${labelRotation(d)}) translate(0, -${1000 / 2.9}) rotate(-${labelRotation(d)})`)
       .style('opacity', (d) => d.value)
+      .style('cursor', 'pointer')
       .style('stroke', 'none')
-      .text((d) => d.data.name);
+      .text((d) => d.data.name)
+      .on('click', (d) => {
+        onClickName(d.data.name);
+      });
     return nameLabels;
   }
   updateProjectWheel({ project, labeled }) {
@@ -143,7 +153,8 @@ Team.defaultProps = {
 Team.propTypes = {
   children: PropTypes.any,
   project: PropTypes.object.isRequired,
-  labeled: PropTypes.bool
+  labeled: PropTypes.bool,
+  onClickName: PropTypes.func
 };
 
 export default Team;

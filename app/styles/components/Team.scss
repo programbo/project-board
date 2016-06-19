@@ -8,6 +8,13 @@
       padding-bottom: 80px;
     }
   }
+  .name-label,
+  .project-label-1 {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   svg {
     @include transition(transform 100ms ease);
     display: block;

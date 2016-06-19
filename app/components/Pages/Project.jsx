@@ -2,11 +2,15 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { IndexLink, Link } from 'react-router';
 import { push } from 'react-router-redux';
-import { Header, Footer, Team } from '../Project';
-import { simpleSlug } from '../../utils/helpers';
 
-const mapStateToProps = ({ projects }) => ({
-  projects
+import { Header, Footer, Team } from '../Project';
+import { filteredProjects } from '../Project/helpers';
+import { simpleSlug } from '../../utils/helpers';
+import { setSearchTerm } from '../../utils/actions';
+
+const mapStateToProps = ({ projects, search }) => ({
+  projects,
+  search
 });
 
 class Project extends React.Component {
@@ -14,6 +18,7 @@ class Project extends React.Component {
     super(props);
     this.getPreviousProject = this.getPreviousProject.bind(this);
     this.getNextProject = this.getNextProject.bind(this);
+    this.handleSearchTerm = this.handleSearchTerm.bind(this);
   }
   componentDidMount() {
     const { dispatch, projects } = this.props;
@@ -48,14 +53,21 @@ class Project extends React.Component {
     return projects[(this.getProjectIndex(projects, project) + 1) % projects.length];
   }
 
+  handleSearchTerm(searchTerm) {
+    const { dispatch } = this.props;
+    dispatch(setSearchTerm(searchTerm));
+    dispatch(push('/'));
+  }
+
   render() {
-    const { projects, params: { brand, name } } = this.props;
+    const { projects: allProjects, search, params: { brand, name } } = this.props;
+    const projects = filteredProjects(allProjects, search);
     this.project = this.getProject(projects, brand, name);
     return (
       <div className="project">
         <IndexLink to="/" className="home-link hidden-xs"><span className="glyphicon glyphicon-th"/></IndexLink>
-        <Header labeled project={this.project}/>
-        <Team project={this.project} labeled/>
+        <Header labeled project={this.project} onClickClient={this.handleSearchTerm}/>
+        <Team project={this.project} labeled onClickName={this.handleSearchTerm}/>
         <Link className="project-nav project-nav-previous" to={this.getPreviousProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-left"/></Link>
         <Link className="project-nav project-nav-next" to={this.getNextProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-right"/></Link>
         <Footer labeled project={this.project}/>
@@ -67,7 +79,8 @@ class Project extends React.Component {
 Project.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.object.isRequired,
-  projects: PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired,
+  search: PropTypes.string
 };
 
 export default connect(mapStateToProps)(Project);
