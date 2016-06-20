@@ -31,7 +31,7 @@
   &-previous {
     left: 3px;
     @include breakpoint($sm) {
-      top: 50%;
+      top: 56%;
       bottom: auto;
       left: 20px;
     }
@@ -39,7 +39,7 @@
   &-next {
     right: 3px;
     @include breakpoint($sm) {
-      top: 50%;
+      top: 56%;
       right: 20px;
       bottom: auto;
     }

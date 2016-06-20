@@ -19,6 +19,7 @@ class Project extends React.Component {
     this.getPreviousProject = this.getPreviousProject.bind(this);
     this.getNextProject = this.getNextProject.bind(this);
     this.handleSearchTerm = this.handleSearchTerm.bind(this);
+    this.renderNavigationLinks = this.renderNavigationLinks.bind(this);
   }
   componentDidMount() {
     const { dispatch, projects } = this.props;
@@ -60,6 +61,15 @@ class Project extends React.Component {
     dispatch(push('/'));
   }
 
+  renderNavigationLinks(projects) {
+    return (
+      <div className="navigation-links">
+        <Link className="project-nav project-nav-previous" to={this.getPreviousProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-left"/></Link>
+        <Link className="project-nav project-nav-next" to={this.getNextProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-right"/></Link>
+      </div>
+    );
+  }
+
   render() {
     const { projects: allProjects, search, params: { brand, name } } = this.props;
     const projects = filteredProjects(allProjects, search);
@@ -69,8 +79,7 @@ class Project extends React.Component {
         <IndexLink to="/" className="home-link hidden-xs"><span className="glyphicon glyphicon-th"/></IndexLink>
         <Header labeled project={this.project} onClickClient={this.handleSearchTerm}/>
         <Team project={this.project} labeled onClickName={this.handleSearchTerm}/>
-        <Link className="project-nav project-nav-previous" to={this.getPreviousProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-left"/></Link>
-        <Link className="project-nav project-nav-next" to={this.getNextProject(projects, this.project).path}><span className="glyphicon glyphicon-chevron-right"/></Link>
+        {projects.length > 1 && this.renderNavigationLinks(projects)}
         <Footer labeled project={this.project}/>
       </div>
     );

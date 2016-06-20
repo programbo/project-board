@@ -20,6 +20,9 @@ class Home extends React.Component {
   }
   onClickSearch() {
     this.props.dispatch(showSearchField());
+    setTimeout(() => {
+      this.searchInput.focus();
+    }, 100);
   }
   onClickHide() {
     this.props.dispatch(hideSearchField());
@@ -29,14 +32,30 @@ class Home extends React.Component {
     this.props.dispatch(setSearchTerm(this.searchInput.value));
   }
 
+  renderHeader() {
+    return (
+      <h1 className="header header-title">
+        All Projects
+        <i onClick={this.onClickSearch} className="glyphicon glyphicon-search"/>
+      </h1>
+    );
+  }
+
+  renderSearchField(search) {
+    return (
+      <h1 className="header header-search">
+        <input className="search-field" type="search" onChange={this.updateSearch} defaultValue={search} placeholder="search..." ref={(ref) => (this.searchInput = ref)}/>
+        <i onClick={this.onClickHide} className="glyphicon glyphicon-remove"/>
+      </h1>
+    );
+  }
+
   render() {
     const { projects, search, searchField } = this.props;
     return (
       <div className="home">
-        {!searchField && <h1>All Projects</h1>}
-        {searchField && <input type="search" onChange={this.updateSearch} defaultValue={search} ref={(ref) => (this.searchInput = ref)}/>}
-        {!searchField && <i onClick={this.onClickSearch} className="glyphicon glyphicon-search"/>}
-        {searchField && <i onClick={this.onClickHide} className="glyphicon glyphicon-remove"/>}
+        {!searchField && this.renderHeader()}
+        {searchField && this.renderSearchField(search)}
         <div className="projects row">
           {filteredProjects(projects, search).map((project, index) => <Link project={project} key={index}/>)}
         </div>

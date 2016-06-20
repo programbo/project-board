@@ -3,7 +3,7 @@
   .project & {
     height: 100vh;
     margin: 0 auto;
-    padding: 200px 20px 120px;
+    padding: 200px 8% 120px;
     @include breakpoint($sm) {
       padding-bottom: 80px;
     }
