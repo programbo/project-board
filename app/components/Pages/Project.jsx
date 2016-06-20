@@ -76,7 +76,7 @@ class Project extends React.Component {
     this.project = this.getProject(projects, brand, name);
     return (
       <div className="project">
-        <IndexLink to="/" className="home-link hidden-xs"><span className="glyphicon glyphicon-th"/></IndexLink>
+        <IndexLink to="/" className="home-link"><span className="glyphicon glyphicon-th"/></IndexLink>
         <Header labeled project={this.project} onClickClient={this.handleSearchTerm}/>
         <Team project={this.project} labeled onClickName={this.handleSearchTerm}/>
         {projects.length > 1 && this.renderNavigationLinks(projects)}

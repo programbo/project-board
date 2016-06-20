@@ -1,9 +1,19 @@
 .project {
   .home-link {
     position: absolute;
-    top: 13px;
-    left: 20px;
+    top: 12px;
+    left: 10px;
     z-index: 1;
+    @include breakpoint($sm) {
+      top: 13px;
+      left: 20px;
+    }
+    .glyphicon {
+      @include font-size(20px, 40px);
+      @include breakpoint($sm) {
+        @include font-size(40px, 40px);
+      }
+    }
   }
   .project-label {
     &:nth-child(even) {
@@ -22,7 +32,6 @@
     }
   }
 }
-
 .project-nav {
   position: absolute;
   bottom: 0;

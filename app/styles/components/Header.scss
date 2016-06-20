@@ -2,9 +2,13 @@
   position: absolute;
   top: 0;
   width: 100%;
+  min-height: 180px;
   text-align: center;
 
   .header-brand {
+    @include font-size(26px);
+    margin-right: 20px;
+    margin-left: 20px;
     cursor: pointer;
     font-style: italic;
     &:hover {
